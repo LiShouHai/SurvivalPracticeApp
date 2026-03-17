@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  wx_openid     String?   @unique
+  unionid       String?   @unique
+  username      String?   @unique
+  password_hash String?
+  nickname      String    @default("健身达人")
+  avatar        String?
+  status        Int       @default(1)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  auth_tokens       AuthToken[]
+  exercises_created Exercise[]      @relation("UserExercises")
+  workout_sessions  WorkoutSession[]
+  checkins          Checkin[]
+  workout_templates WorkoutTemplate[]
+
+  @@map("users")
+}
+
+model AuthToken {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  token      String
+  expires_at DateTime
+  revoked_at DateTime?
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+  @@map("auth_tokens")
+}
+
+model ExerciseCategory {
+  id    Int    @id @default(autoincrement())
+  code  String @unique
+  name  String
+  sort  Int    @default(0)
+  color String?
+
+  groups    ExerciseGroup[]
+  exercises Exercise[]
+
+  @@map("exercise_categories")
+}
+
+model ExerciseGroup {
+  id          Int    @id @default(autoincrement())
+  category_id Int
+  code        String
+  name        String
+  sort        Int    @default(0)
+  description String?
+
+  category  ExerciseCategory @relation(fields: [category_id], references: [id])
+  exercises Exercise[]
+
+  @@unique([category_id, code])
+  @@index([category_id])
+  @@map("exercise_groups")
+}
+
+model Exercise {
+  id          Int      @id @default(autoincrement())
+  category_id Int
+  group_id    Int
+  name        String
+  equipment   String?
+  is_custom   Boolean  @default(false)
+  created_by  Int?
+  is_active   Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  category ExerciseCategory @relation(fields: [category_id], references: [id])
+  group    ExerciseGroup    @relation(fields: [group_id], references: [id])
+  creator  User?            @relation("UserExercises", fields: [created_by], references: [id])
+  template_items WorkoutTemplateItem[]
+
+  @@index([category_id])
+  @@index([group_id])
+  @@index([created_by])
+  @@map("exercises")
+}
+
+model WorkoutSession {
+  id             Int      @id @default(autoincrement())
+  user_id        Int
+  start_time     DateTime
+  end_time       DateTime?
+  duration_sec   Int?     @default(0)
+  total_volume   Int?     @default(0)
+  total_sets     Int?     @default(0)
+  completed_sets Int?     @default(0)
+  calories_est   Int?     @default(0)
+  status         Int      @default(1)
+  created_at     DateTime @default(now())
+
+  user      User              @relation(fields: [user_id], references: [id])
+  exercises WorkoutExercise[]
+
+  @@index([user_id, start_time])
+  @@map("workout_sessions")
+}
+
+model WorkoutExercise {
+  id                Int      @id @default(autoincrement())
+  workout_id        Int
+  exercise_id       Int?
+  name_snapshot     String
+  category_snapshot String
+  group_snapshot    String?
+  sort              Int      @default(0)
+
+  workout WorkoutSession @relation(fields: [workout_id], references: [id])
+  sets    WorkoutSet[]
+
+  @@index([workout_id])
+  @@map("workout_exercises")
+}
+
+model WorkoutSet {
+  id                  Int      @id @default(autoincrement())
+  workout_exercise_id Int
+  set_index           Int
+  weight              Decimal? @db.Decimal(8, 2)
+  reps                Int?
+  completed           Boolean  @default(false)
+
+  workout_exercise WorkoutExercise @relation(fields: [workout_exercise_id], references: [id])
+
+  @@index([workout_exercise_id])
+  @@map("workout_sets")
+}
+
+model Checkin {
+  id            Int      @id @default(autoincrement())
+  user_id       Int
+  checkin_date  DateTime @db.Date
+  checkin_time  DateTime? @db.Time
+  location      String?
+  created_at    DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, checkin_date])
+  @@index([user_id])
+  @@map("checkins")
+}
+
+model WorkoutTemplate {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  name        String
+  icon        String?
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  user  User                    @relation(fields: [user_id], references: [id])
+  items WorkoutTemplateItem[]
+
+  @@index([user_id])
+  @@map("workout_templates")
+}
+
+model WorkoutTemplateItem {
+  id          Int @id @default(autoincrement())
+  template_id Int
+  exercise_id Int
+  sort        Int @default(0)
+
+  template WorkoutTemplate @relation(fields: [template_id], references: [id])
+  exercise Exercise        @relation(fields: [exercise_id], references: [id])
+
+  @@index([template_id])
+  @@map("workout_template_items")
+}

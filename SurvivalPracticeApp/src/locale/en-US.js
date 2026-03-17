@@ -1,0 +1,52 @@
+export default {
+  common: {
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+    save: 'Save',
+    delete: 'Delete',
+    loading: 'Loading...',
+    success: 'Success',
+    fail: 'Failed',
+    retry: 'Retry',
+    noData: 'No data',
+    more: 'More',
+  },
+  tabbar: {
+    home: 'Home',
+    workout: 'Workout',
+    badge: 'Badge',
+    me: 'Me',
+  },
+  home: {
+    greeting: 'Keep going today!',
+    checkIn: 'Check In',
+    checkedIn: 'Checked In',
+    streak: '{days} day streak',
+    todayStats: 'Today\'s Stats',
+    duration: 'Duration',
+    calories: 'Calories',
+    exercises: 'Exercises',
+    minutes: 'min',
+    kcal: 'kcal',
+    count: '',
+  },
+  workout: {
+    title: 'Workout',
+  },
+  badge: {
+    title: 'Badge',
+  },
+  me: {
+    title: 'Me',
+  },
+  settings: {
+    title: 'Settings',
+    language: 'Language',
+    theme: 'Theme',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    themeSystem: 'System',
+    languageZh: '简体中文',
+    languageEn: 'English',
+  },
+}

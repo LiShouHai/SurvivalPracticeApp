@@ -1,0 +1,37 @@
+.theme-dark {
+  // 品牌色
+  --app-color-primary: #3dd4ce;
+  --app-color-primary-light: #5ee0db;
+  --app-color-primary-dark: #2cbfba;
+  --app-color-primary-opacity: rgba(61, 212, 206, 0.15);
+
+  // 页面背景
+  --app-bg-color: #1a1a1a;
+  --app-bg-color-card: #2c2c2c;
+  --app-bg-color-hover: #383838;
+  --app-bg-color-mask: rgba(0, 0, 0, 0.7);
+
+  // 文字颜色
+  --app-text-color: #e5e5e5;
+  --app-text-color-secondary: #a0a0a0;
+  --app-text-color-placeholder: #666666;
+  --app-text-color-inverse: #1a1a1a;
+  --app-text-color-disabled: #555555;
+
+  // 边框
+  --app-border-color: #3a3a3a;
+  --app-border-color-light: #333333;
+
+  // 阴影
+  --app-shadow-card: 0 2rpx 12rpx rgba(0, 0, 0, 0.3);
+  --app-shadow-elevated: 0 8rpx 24rpx rgba(0, 0, 0, 0.4);
+
+  // Tabbar
+  --app-tabbar-bg: #2c2c2c;
+  --app-tabbar-border: #3a3a3a;
+  --app-tabbar-text: #666666;
+  --app-tabbar-text-active: #3dd4ce;
+
+  // 覆写 wot-design 组件库主题色
+  --wot-color-theme: #3dd4ce;
+}
