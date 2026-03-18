@@ -99,7 +99,9 @@ app.use(errorHandler);
 
 // 启动服务
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`服务已启动：http://localhost:${PORT}`);
+const HOST = '0.0.0.0';
+
+app.listen(PORT, HOST, () => {
+  console.log(`服务已启动：http://${HOST}:${PORT}`);
   console.log(`运行环境：${process.env.NODE_ENV || 'development'}`);
 });
