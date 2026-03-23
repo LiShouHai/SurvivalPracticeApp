@@ -170,6 +170,9 @@ export default defineConfig(({ command, mode }) => {
       alias: {
         '@': path.join(process.cwd(), './src'),
         '@img': path.join(process.cwd(), './src/static/images'),
+        'pinia': path.join(process.cwd(), './node_modules/pinia/dist/pinia.mjs'),
+        'vue-demi': path.join(process.cwd(), './node_modules/vue-demi/lib/index.mjs'),
+        '@vue/devtools-api': path.join(process.cwd(), './node_modules/@vue/devtools-api/lib/esm/index.js'),
       },
     },
     server: {

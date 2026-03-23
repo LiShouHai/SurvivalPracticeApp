@@ -1,37 +1,29 @@
-﻿import { defineStore } from 'pinia'
+import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getUserInfo as getUserInfoApi, getWxCode, wxLogin as wxLoginApi } from '@/api/login'
 import { toastError, toastInfo, toastSuccess } from '@/utils/feedback'
 
-// 鐢ㄦ埛淇℃伅鍒濆鐘舵€?
 const userInfoState = {
   userId: -1,
   username: '',
-  nickname: '鍋ヨ韩杈句汉',
+  nickname: '健身达人',
   avatar: '/static/images/default-avatar.png',
 }
 
 export const useUserStore = defineStore(
   'user',
   () => {
-    // 鐢ㄦ埛淇℃伅
     const userInfo = ref({ ...userInfoState })
-
-    // 鐧诲綍鐘舵€?
     const isLoggedIn = ref(false)
 
-    // 璁剧疆鐢ㄦ埛淇℃伅
     const setUserInfo = (val) => {
-      // 鑻ュご鍍忎负绌哄垯浣跨敤榛樿澶村儚
-      if (!val.avatar) {
-        val.avatar = userInfoState.avatar
+      const nextUser = {
+        ...val,
+        avatar: val.avatar || userInfoState.avatar,
       }
-      userInfo.value = val
+      userInfo.value = nextUser
     }
 
-    /**
-     * 浠庡悗绔悓姝ョ敤鎴蜂俊鎭?
-     */
     const syncUserInfo = async () => {
       try {
         const res = await getUserInfoApi()
@@ -43,16 +35,14 @@ export const useUserStore = defineStore(
         })
       }
       catch (err) {
-        console.error('鍚屾鐢ㄦ埛淇℃伅澶辫触:', err)
+        console.error('同步用户信息失败:', err)
       }
     }
 
-    // 璁剧疆鐢ㄦ埛澶村儚
     const setUserAvatar = (avatar) => {
       userInfo.value.avatar = avatar
     }
 
-    // 娓呴櫎鐢ㄦ埛淇℃伅
     const clearUserInfo = () => {
       userInfo.value = { ...userInfoState }
       isLoggedIn.value = false
@@ -60,7 +50,6 @@ export const useUserStore = defineStore(
       uni.removeStorageSync('token')
     }
 
-    // 寰俊鐧诲綍
     const wxLogin = async () => {
       try {
         const { code } = await getWxCode()
@@ -84,17 +73,14 @@ export const useUserStore = defineStore(
         return result
       }
       catch (error) {
-        console.error('寰俊鐧诲綍澶辫触:', error)
+        console.error('微信登录失败:', error)
         toastError('微信登录失败')
         throw error
       }
     }
 
-    // 璐﹀彿瀵嗙爜鐧诲綍
     const passwordLogin = async (username, password) => {
       try {
-        // TODO: 璋冪敤鍚庣鐧诲綍鎺ュ彛
-        // 鐩墠妯℃嫙鐧诲綍鎴愬姛
         setUserInfo({
           userId: 1,
           username,
@@ -106,13 +92,12 @@ export const useUserStore = defineStore(
         toastSuccess('登录成功')
       }
       catch (error) {
-        console.error('鐧诲綍澶辫触:', error)
+        console.error('登录失败:', error)
         toastError('登录失败')
         throw error
       }
     }
 
-    // 閫€鍑虹櫥褰?
     const logout = () => {
       clearUserInfo()
       toastInfo('已退出登录')
@@ -134,5 +119,3 @@ export const useUserStore = defineStore(
     persist: true,
   },
 )
-
-

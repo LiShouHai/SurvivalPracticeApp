@@ -1,8 +1,10 @@
-﻿import { useFeedbackStore } from '@/store/feedback'
+import { useFeedbackStore } from '@/store/feedback'
 
 export function showToast({ title, message, type = 'info', duration } = {}) {
   const content = message || title
-  if (!content) return
+  if (!content)
+    return
+
   const store = useFeedbackStore()
   store.showToast({ message: content, type, duration })
 }

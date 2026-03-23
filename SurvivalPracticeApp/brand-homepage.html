@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>生存练习 Brand Homepage</title>
+    <style>
+      :root {
+        --bg: #090b08;
+        --bg-soft: #12160f;
+        --line: rgba(212, 255, 77, 0.16);
+        --text: #f4f1e8;
+        --muted: rgba(244, 241, 232, 0.72);
+        --accent: #d4ff4d;
+        --headline: "DIN Alternate", "Arial Narrow", "Impact", sans-serif;
+        --sans: "SF Pro Display", "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background:
+          radial-gradient(circle at 18% 12%, rgba(212, 255, 77, 0.15), transparent 30%),
+          radial-gradient(circle at 80% 24%, rgba(212, 255, 77, 0.12), transparent 24%),
+          linear-gradient(180deg, #141911 0%, #090b08 40%, #0d100c 100%);
+        color: var(--text);
+        font-family: var(--sans);
+      }
+
+      .brand-home {
+        position: relative;
+        min-height: 100vh;
+        isolation: isolate;
+      }
+
+      .brand-grid,
+      .brand-grid::before,
+      .brand-grid::after {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .brand-grid {
+        inset: 0 0 auto 0;
+        height: min(100vh, 960px);
+        background:
+          linear-gradient(rgba(212, 255, 77, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(212, 255, 77, 0.05) 1px, transparent 1px);
+        background-size: 56px 56px;
+        opacity: 0.72;
+      }
+
+      .brand-grid::before {
+        content: "";
+        background: linear-gradient(90deg, transparent, rgba(212, 255, 77, 0.08), transparent);
+        transform: translateX(-45%);
+        animation: scan-line 18s linear infinite;
+        opacity: 0.42;
+      }
+
+      .brand-grid::after {
+        content: "";
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0, transparent 56%);
+        opacity: 0.06;
+      }
+
+      .brand-glow {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.24;
+        pointer-events: none;
+      }
+
+      .brand-glow--left {
+        width: 360px;
+        height: 360px;
+        top: -120px;
+        left: -80px;
+        background: radial-gradient(circle, rgba(212, 255, 77, 0.24) 0, rgba(212, 255, 77, 0) 70%);
+      }
+
+      .brand-glow--right {
+        width: 420px;
+        height: 420px;
+        right: -160px;
+        top: 18vh;
+        background: radial-gradient(circle, rgba(124, 165, 30, 0.22) 0, rgba(124, 165, 30, 0) 72%);
+      }
+
+      .hero-shell {
+        position: relative;
+        min-height: 100vh;
+        padding: 24px clamp(20px, 4vw, 52px) 42px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        overflow: clip;
+      }
+
+      .topbar {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .brand-mark {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .brand-mark__cn {
+        font-size: clamp(20px, 2vw, 28px);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+
+      .brand-mark__en,
+      .section-label,
+      .hero-label,
+      .pillar-index,
+      .pillar-english,
+      .story-step,
+      .story-chip {
+        font-size: 12px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(212, 255, 77, 0.88);
+      }
+
+      .topbar-nav {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        flex-wrap: wrap;
+      }
+
+      .topbar-link {
+        position: relative;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 13px;
+      }
+
+      .topbar-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -5px;
+        height: 1px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.24s ease;
+      }
+
+      .topbar-link:hover::after {
+        transform: scaleX(1);
+      }
+
+      .topbar-link--strong {
+        color: var(--text);
+      }
+
+      .hero-stage {
+        position: relative;
+        z-index: 2;
+        flex: 1;
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(360px, 0.85fr);
+        gap: clamp(28px, 5vw, 72px);
+        align-items: center;
+        padding: clamp(48px, 9vh, 120px) 0 24px;
+      }
+
+      .hero-copy {
+        max-width: 560px;
+        animation: hero-rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+
+      .hero-title,
+      .section-title,
+      .story-kicker,
+      .story-title,
+      .cta-title {
+        font-family: var(--headline);
+        text-transform: uppercase;
+      }
+
+      .hero-title {
+        margin: 18px 0 0;
+        font-size: clamp(68px, 10vw, 146px);
+        line-height: 0.88;
+        letter-spacing: -0.06em;
+        white-space: pre-line;
+      }
+
+      .hero-subtitle,
+      .pillar-description,
+      .story-description,
+      .cta-copy {
+        max-width: 480px;
+        font-size: clamp(16px, 1.7vw, 21px);
+        line-height: 1.75;
+        color: var(--muted);
+      }
+
+      .hero-actions,
+      .cta-actions {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-top: 28px;
+      }
+
+      .hero-button {
+        min-width: 176px;
+        padding: 15px 22px;
+        border-radius: 999px;
+        border: 1px solid rgba(212, 255, 77, 0.28);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-align: center;
+        text-decoration: none;
+        transition: transform 0.24s ease, border-color 0.24s ease, background 0.24s ease;
+      }
+
+      .hero-button:hover {
+        transform: translateY(-2px);
+      }
+
+      .hero-button--solid {
+        background: linear-gradient(90deg, var(--accent), #e6ff9b);
+        color: #0b0d08;
+        border-color: transparent;
+        box-shadow: 0 18px 36px rgba(212, 255, 77, 0.22);
+      }
+
+      .hero-button--ghost {
+        background: rgba(255, 255, 255, 0.02);
+        color: var(--text);
+      }
+
+      .hero-visual {
+        position: relative;
+        min-height: clamp(420px, 70vh, 760px);
+        animation: hero-visual-in 1.1s cubic-bezier(0.18, 0.9, 0.22, 1) 0.1s both;
+      }
+
+      .hero-target {
+        position: absolute;
+        border-radius: 50%;
+        border: 1px solid rgba(212, 255, 77, 0.12);
+      }
+
+      .hero-target--outer {
+        width: clamp(360px, 42vw, 600px);
+        height: clamp(360px, 42vw, 600px);
+        right: 4%;
+        top: 8%;
+      }
+
+      .hero-target--inner {
+        width: clamp(260px, 28vw, 400px);
+        height: clamp(260px, 28vw, 400px);
+        right: 16%;
+        top: 20%;
+      }
+
+      .hero-figure {
+        position: absolute;
+        right: 6%;
+        bottom: 0;
+        width: min(36vw, 420px);
+        height: min(70vh, 720px);
+      }
+
+      .hero-figure__head,
+      .hero-figure__torso,
+      .hero-figure__arm,
+      .hero-figure__weight,
+      .hero-figure__leg {
+        position: absolute;
+        background: linear-gradient(180deg, rgba(243, 247, 229, 0.94), rgba(212, 255, 77, 0.12));
+      }
+
+      .hero-figure__head {
+        top: 4%;
+        left: 46%;
+        width: 18%;
+        height: 12%;
+        border-radius: 50% 50% 45% 45%;
+        box-shadow: 0 0 30px rgba(212, 255, 77, 0.2);
+      }
+
+      .hero-figure__torso {
+        top: 15%;
+        left: 31%;
+        width: 38%;
+        height: 40%;
+        border-radius: 42% 44% 24% 30%;
+        transform: rotate(8deg);
+      }
+
+      .hero-figure__arm {
+        top: 18%;
+        width: 18%;
+        height: 36%;
+        border-radius: 999px;
+      }
+
+      .hero-figure__arm--left {
+        left: 17%;
+        transform: rotate(18deg);
+      }
+
+      .hero-figure__arm--right {
+        right: 11%;
+        transform: rotate(-16deg);
+      }
+
+      .hero-figure__weight {
+        top: 29%;
+        left: 8%;
+        width: 84%;
+        height: 7%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(212, 255, 77, 0.4), rgba(255, 255, 255, 0.95), rgba(212, 255, 77, 0.4));
+      }
+
+      .hero-figure__leg {
+        top: 48%;
+        width: 20%;
+        height: 42%;
+        border-radius: 999px;
+      }
+
+      .hero-figure__leg--left {
+        left: 28%;
+        transform: rotate(8deg);
+      }
+
+      .hero-figure__leg--right {
+        right: 27%;
+        transform: rotate(-8deg);
+      }
+
+      .hero-stripe {
+        position: absolute;
+        left: 0;
+        bottom: 10%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-left: 16px;
+        border-left: 2px solid rgba(212, 255, 77, 0.26);
+      }
+
+      .hero-stripe span {
+        font-family: var(--headline);
+        font-size: clamp(18px, 2.1vw, 30px);
+        line-height: 0.9;
+        letter-spacing: 0.08em;
+        color: rgba(244, 241, 232, 0.7);
+      }
+
+      .hero-band {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding-top: 18px;
+        border-top: 1px solid rgba(212, 255, 77, 0.16);
+      }
+
+      .hero-band__item {
+        padding: 9px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(212, 255, 77, 0.16);
+        background: rgba(212, 255, 77, 0.05);
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        color: rgba(244, 241, 232, 0.8);
+      }
+
+      .philosophy-section,
+      .story-section,
+      .cta-section {
+        position: relative;
+        z-index: 1;
+        padding: clamp(72px, 10vw, 128px) clamp(20px, 4vw, 52px);
+        content-visibility: auto;
+        contain-intrinsic-size: 720px;
+      }
+
+      .philosophy-section {
+        background: linear-gradient(180deg, rgba(14, 17, 12, 0.92), rgba(9, 11, 8, 0.96));
+      }
+
+      .section-header,
+      .story-heading {
+        display: grid;
+        gap: 14px;
+        margin-bottom: clamp(28px, 4vw, 44px);
+      }
+
+      .section-title,
+      .story-kicker,
+      .cta-title {
+        font-size: clamp(40px, 5.5vw, 84px);
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+        max-width: 980px;
+      }
+
+      .philosophy-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 26px;
+      }
+
+      .pillar {
+        min-height: 360px;
+        padding-top: 26px;
+        border-top: 1px solid var(--line);
+        display: grid;
+        align-content: start;
+        gap: 14px;
+      }
+
+      .pillar-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .pillar-icon {
+        width: 34px;
+        height: 34px;
+        opacity: 0.72;
+      }
+
+      .pillar-title {
+        font-size: clamp(38px, 4vw, 62px);
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+      }
+
+      .story-section {
+        display: grid;
+        grid-template-columns: minmax(0, 0.64fr) minmax(0, 1fr);
+        gap: clamp(28px, 4vw, 64px);
+      }
+
+      .story-heading {
+        position: sticky;
+        top: 28px;
+        align-self: start;
+      }
+
+      .story-sequence {
+        display: grid;
+        gap: 22px;
+      }
+
+      .story-frame {
+        display: grid;
+        grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1fr);
+        gap: 24px;
+        padding: 18px 0 28px;
+        border-top: 1px solid rgba(212, 255, 77, 0.12);
+      }
+
+      .story-visual {
+        position: relative;
+        min-height: 240px;
+        padding: 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        background:
+          linear-gradient(155deg, rgba(212, 255, 77, 0.12), rgba(212, 255, 77, 0.02)),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+        overflow: hidden;
+      }
+
+      .story-visual::after {
+        content: "";
+        position: absolute;
+        inset: auto 12% -12% 12%;
+        height: 54%;
+        border-radius: 999px 999px 16px 16px;
+        background: linear-gradient(180deg, rgba(244, 241, 232, 0.34), rgba(212, 255, 77, 0.04));
+        transform: skew(-10deg);
+      }
+
+      .story-chip {
+        position: relative;
+        z-index: 1;
+        padding: 8px 10px;
+        border: 1px solid rgba(212, 255, 77, 0.18);
+        border-radius: 999px;
+        background: rgba(9, 11, 8, 0.45);
+      }
+
+      .story-copy {
+        display: grid;
+        align-content: center;
+        gap: 16px;
+      }
+
+      .story-title {
+        font-size: clamp(34px, 4vw, 58px);
+        line-height: 0.96;
+        letter-spacing: -0.04em;
+      }
+
+      .cta-section {
+        padding-top: clamp(88px, 10vw, 136px);
+        padding-bottom: clamp(96px, 11vw, 152px);
+        text-align: center;
+        background:
+          radial-gradient(circle at 50% 0%, rgba(212, 255, 77, 0.12), transparent 30%),
+          linear-gradient(180deg, rgba(9, 11, 8, 0.9), rgba(9, 11, 8, 1));
+      }
+
+      .cta-title {
+        margin: 14px auto 0;
+        max-width: 760px;
+      }
+
+      .cta-copy {
+        margin: 18px auto 0;
+        max-width: 560px;
+      }
+
+      .cta-actions {
+        justify-content: center;
+      }
+
+      @keyframes hero-rise {
+        from {
+          opacity: 0;
+          transform: translateY(36px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes hero-visual-in {
+        from {
+          opacity: 0;
+          transform: translateX(36px) scale(0.96);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+        }
+      }
+
+      @keyframes scan-line {
+        from {
+          transform: translateX(-45%);
+        }
+        to {
+          transform: translateX(145%);
+        }
+      }
+
+      @media (max-width: 1080px) {
+        .brand-grid::before {
+          animation: none;
+        }
+
+        .hero-stage,
+        .story-section,
+        .story-frame,
+        .philosophy-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .story-heading {
+          position: static;
+        }
+
+        .pillar {
+          min-height: auto;
+        }
+
+        .hero-visual {
+          min-height: 420px;
+        }
+
+        .hero-figure {
+          right: 8%;
+          width: min(60vw, 360px);
+          height: 460px;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .brand-grid {
+          height: 72vh;
+        }
+
+        .brand-glow {
+          opacity: 0.16;
+        }
+
+        .hero-shell,
+        .philosophy-section,
+        .story-section,
+        .cta-section {
+          padding-left: 18px;
+          padding-right: 18px;
+        }
+
+        .topbar {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .hero-title {
+          font-size: clamp(54px, 20vw, 84px);
+        }
+
+        .hero-subtitle,
+        .pillar-description,
+        .story-description,
+        .cta-copy {
+          font-size: 15px;
+        }
+
+        .hero-visual {
+          min-height: 360px;
+        }
+
+        .hero-target--outer {
+          width: 260px;
+          height: 260px;
+        }
+
+        .hero-target--inner {
+          width: 180px;
+          height: 180px;
+        }
+
+        .hero-figure {
+          width: 240px;
+          height: 340px;
+        }
+
+        .hero-stripe {
+          left: auto;
+          right: 0;
+          bottom: 4%;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="brand-home">
+      <div class="brand-grid"></div>
+      <div class="brand-glow brand-glow--left"></div>
+      <div class="brand-glow brand-glow--right"></div>
+
+      <section class="hero-shell">
+        <header class="topbar">
+          <div class="brand-mark">
+            <span class="brand-mark__cn">生存练习</span>
+            <span class="brand-mark__en">SURVIVAL PRACTICE</span>
+          </div>
+          <nav class="topbar-nav">
+            <a class="topbar-link" href="#system">理念</a>
+            <a class="topbar-link" href="#story">体系</a>
+            <a class="topbar-link topbar-link--strong" href="#cta">开始了解</a>
+          </nav>
+        </header>
+
+        <div class="hero-stage">
+          <div class="hero-copy">
+            <div class="hero-label">FIELD CONDITIONING FOR THE YOUNG</div>
+            <h1 class="hero-title">把身体
+练成武器</h1>
+            <p class="hero-subtitle">
+              生存练习不是传统健身房话术，而是一套面向年轻训练者的体能宣言。
+              你练出的不是样子，是更能扛、更能稳、更能持续输出的身体。
+            </p>
+            <div class="hero-actions">
+              <a class="hero-button hero-button--solid" href="#system">查看训练体系</a>
+              <a class="hero-button hero-button--ghost" href="#story">认识生存练习</a>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-target hero-target--outer"></div>
+            <div class="hero-target hero-target--inner"></div>
+            <div class="hero-figure">
+              <div class="hero-figure__head"></div>
+              <div class="hero-figure__torso"></div>
+              <div class="hero-figure__arm hero-figure__arm--left"></div>
+              <div class="hero-figure__arm hero-figure__arm--right"></div>
+              <div class="hero-figure__weight"></div>
+              <div class="hero-figure__leg hero-figure__leg--left"></div>
+              <div class="hero-figure__leg hero-figure__leg--right"></div>
+            </div>
+            <div class="hero-stripe">
+              <span>ACTIVE BODY</span>
+              <span>DISCIPLINED MIND</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-band">
+          <span class="hero-band__item">力量不是表演</span>
+          <span class="hero-band__item">耐力不是忍耐</span>
+          <span class="hero-band__item">纪律不是口号</span>
+        </div>
+      </section>
+
+      <section class="philosophy-section" id="system">
+        <div class="section-header">
+          <div class="section-label">TRAINING PHILOSOPHY</div>
+          <h2 class="section-title">三条主线，撑起整个训练人格。</h2>
+        </div>
+        <div class="philosophy-grid">
+          <article class="pillar">
+            <div class="pillar-top">
+              <span class="pillar-index">01</span>
+              <img class="pillar-icon" src="./src/static/my-icons/dumbbell.svg" alt="力量" />
+            </div>
+            <div class="pillar-english">POWER</div>
+            <div class="pillar-title">力量</div>
+            <p class="pillar-description">不是练出一张吓人的照片，而是练出真正能输出的身体。</p>
+          </article>
+          <article class="pillar">
+            <div class="pillar-top">
+              <span class="pillar-index">02</span>
+              <img class="pillar-icon" src="./src/static/my-icons/back.svg" alt="耐力" />
+            </div>
+            <div class="pillar-english">ENGINE</div>
+            <div class="pillar-title">耐力</div>
+            <p class="pillar-description">让体能在长时间消耗里也不失速，把状态留到真正需要的时候。</p>
+          </article>
+          <article class="pillar">
+            <div class="pillar-top">
+              <span class="pillar-index">03</span>
+              <img class="pillar-icon" src="./src/static/my-icons/leg.svg" alt="纪律" />
+            </div>
+            <div class="pillar-english">DISCIPLINE</div>
+            <div class="pillar-title">纪律</div>
+            <p class="pillar-description">把训练从热血冲动改成稳定执行，让每一次重复都留下痕迹。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="story-section" id="story">
+        <div class="story-heading">
+          <div class="section-label">STORY SEQUENCE</div>
+          <h2 class="story-kicker">不是一页官网，是一段训练现场。</h2>
+        </div>
+        <div class="story-sequence">
+          <article class="story-frame">
+            <div class="story-visual">
+              <span class="story-step">A1</span>
+              <span class="story-chip">启动</span>
+            </div>
+            <div class="story-copy">
+              <h3 class="story-title">先稳住自己的输出。</h3>
+              <p class="story-description">
+                生存练习不从“看起来更会练”开始，而从“真正能扛住今天”开始。
+                热身、启动、呼吸、重心，先把身体调进可战斗的状态。
+              </p>
+            </div>
+          </article>
+          <article class="story-frame">
+            <div class="story-visual">
+              <span class="story-step">A2</span>
+              <span class="story-chip">推进</span>
+            </div>
+            <div class="story-copy">
+              <h3 class="story-title">然后把极限练成日常。</h3>
+              <p class="story-description">
+                力量训练、耐力推进和密度控制交替出现。页面阅读节奏像训练本身，
+                短、硬、快，没有多余解释。
+              </p>
+            </div>
+          </article>
+          <article class="story-frame">
+            <div class="story-visual">
+              <span class="story-step">A3</span>
+              <span class="story-chip">留下</span>
+            </div>
+            <div class="story-copy">
+              <h3 class="story-title">最后让纪律留下痕迹。</h3>
+              <p class="story-description">
+                真正有价值的不是一次爆发，而是每次都能回来。生存练习想传达的，
+                是一种可以带回日常的身体可靠性。
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="cta-section" id="cta">
+        <div class="section-label">FINAL CALL</div>
+        <h2 class="cta-title">练得够狠，日常才稳。</h2>
+        <p class="cta-copy">
+          如果你想先理解一种更有纪律、更能输出、也更有品牌态度的训练方式，
+          生存练习就是从这里开始。
+        </p>
+        <div class="cta-actions">
+          <a class="hero-button hero-button--solid" href="#system">完整了解训练方法</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
